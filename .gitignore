@@ -1,0 +1,14 @@
+node_modules/
+*.tgz
+.DS_Store
+.turbo/
+.next/
+dist/
+build/
+out/
+coverage/
+.cache/
+*.log
+.npmrc
+# 市场安装标记(仅装时生成,不入源码仓库)
+.dtcoder-*.json

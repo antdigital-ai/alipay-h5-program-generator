@@ -1,0 +1,10 @@
+{
+  "name": "alipay-h5-program-generator",
+  "package": "alipay-h5-program-generator",
+  "files": {
+    "SKILL.md": "SKILL.md",
+    "references": "references/",
+    "assets": "assets/",
+    "scripts": "scripts/"
+  }
+}

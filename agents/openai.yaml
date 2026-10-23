@@ -1,0 +1,3 @@
+interface:
+  display_name: "Alipay H5 程序生成器"
+  short_description: "支付宝第三方纯H5网页(开放平台/纯H5,非小程序/不依赖私有基建),SEO+分享+支付"
