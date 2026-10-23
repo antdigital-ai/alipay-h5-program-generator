@@ -1,6 +1,6 @@
 ---
 name: alipay-h5-program-generator
-description: 在支付宝开放平台「网页&移动应用」下开发第三方纯 H5 网页应用——部署到公网、可被搜索引擎收录、可分享、内嵌在支付宝 WebView。技术栈 React+TS+AntD Mobile+Next(SSR/SSG)；能力以服务端接口(手机网站支付、OAuth)+alipays scheme 唤起为主。不要用于依赖原生容器/离线包/私有 RPC 等私有基建的项目，也不要用于支付宝小程序。
+description: 在支付宝开放平台「网页&移动应用」下开发第三方纯 H5 网页应用——部署到公网、可被搜索引擎收录、可分享、内嵌在支付宝 WebView。技术栈 React+TS+AntD Mobile+Next(SSR/SSG)；能力以服务端接口(手机网站支付、OAuth)+alipays scheme 唤起为主；以 G1–G5 全链路工程门禁(需求→细化→设计→选型→编码→测试→发布)覆盖，自带 check-env/check-project/check-seo/check-build 确定性脚本。不要用于依赖原生容器/离线包/私有 RPC 等私有基建的项目，也不要用于支付宝小程序。
 ---
 
 # 支付宝第三方纯 H5 网页应用
@@ -41,10 +41,14 @@ description: 在支付宝开放平台「网页&移动应用」下开发第三方
 - **性能**：发布侧（SSR/SSG + CDN + 图片优化 + Service Worker）见 references/release-perf.md；编码侧运行时性能（React 渲染 / 虚拟列表 / CLS / INP / bundle 预算）亦在其中。
 - **交互体验**：骨架 / 空错态 / 重试、下拉刷新 + 上拉加载、点击反馈与防抖、表单与键盘、返回与转场、弱网降级。见 references/ux-interaction.md。
 
-## 工作流
+## 工作流（G1–G5 工程门禁；每门满足出口准则才进下一门，发现上层决策错回退）
 
-1. 确认是「网页&移动应用」第三方纯 H5（非小程序、不依赖私有基建）。
-2. 定渲染策略(SSR/SSG)与 URL 结构（references/architecture.md）。
-3. 用 assets/frontend-template 的 `container.ts` 做环境判定 + 服务端跳转/scheme + 降级（references/container.md）。
-4. 写页面：SSR head(OG/canonical/jsonld) + hydrate 登录态。
-5. 跑 scripts/check-env.mjs 打印能力矩阵与浏览器探针，在真机/模拟器核对环境与可用能力。
+**G1 需求确认与细化** — 入口：拿到 H5 需求。出口：填好需求细化表（A/B/C 页拆分 + 公开/登录态字段 + 收录词 + 分享/支付/授权取舍 + 接口清单）。回退：若实际要原生小程序能力（多 webview/离线包/自定义分享）→ 改做小程序，不进。细则见 references/requirements.md。
+
+**G2 设计与选型** — 入口：G1 细化表。出口：URL 结构(A/B/C) + 每页渲染决策(SSG/SSG+ISR/SSR/CSR) + 容器层公开能力清单 + 接口契约/mock。回退：能力结论与公网不符（勾到不可用 API）→ 回 G1 重核 opendocs，勿臆造。细则见 references/architecture.md、references/tech-selection.md、references/container.md、references/ssr-seo-sharing.md。
+
+**G3 编码** — 入口：G2 设计。出口：按 coding-standards.md 落目录/类型/server·client 边界/env 边界/a11y；模板见 assets/frontend-template。回退：违反 env 边界(私钥入前端)或引入禁用 API 时回 G2 调整。细则见 references/coding-standards.md、references/responsive-cross-end.md、references/ux-interaction.md。
+
+**G4 测试验收** — 入口：可运行。出口：护栏脚本 rc=0（check-env/check-project/check-seo/check-build）且 testing-acceptance.md §1–9 全过（SEO 收录/分享/支付 e2e/降级/移动/性能预算/a11y）。回退：挂哪回哪门（能力→G2、编法→G3）。细则见 references/testing-acceptance.md。
+
+**G5 发布** — 入口：G4 全绿。出口：发布前门(release.md)过（产物/secret/灰度计划/监控/回滚），按 CDN 灰度放量，发布后核对收录/分享/支付真机。回退：超阈值即回滚切版本。细则见 references/release.md、references/release-perf.md。

@@ -59,16 +59,19 @@ npx alipay-h5-program-generator uninstall
 |---|---|---|
 | `scripts/check-env.mjs` | 打印能力矩阵 + 浏览器探针（viewport / UA / AlipayJSBridge / ServiceWorker / localStorage） | `0` done |
 | `scripts/check-project.mjs` | 项目护栏确定性扫描：禁止容器/小程序/私有 API 调用遗址 | `0` pass / `1` 禁止项 |
+| `scripts/check-seo.mjs` | 构建前 SEO 收录一致性：canonical↔og↔URL 一致、sitemap/robots 在场、无 cloaking 嫌疑 | `0` pass / `1` 须修 / `2` 非 App Router |
+| `scripts/check-build.mjs` | 发布前门：NEXT_PUBLIC_ 不暴露 secret、(构建后)产物无私钥串、app/api 不误用 public 变量 | `0` pass / `1` 须修 |
 
 ## Directory
 ```
 SKILL.md                      # Skill 指令正文
 .claude-skill.json            # 包 → 技能 manifest
 references/
-  architecture.md · container.md · ssr-seo-sharing.md · env-degradation.md
-  cross-page-comm.md · release-perf.md · responsive-cross-end.md · ux-interaction.md · pitfalls.md
-assets/frontend-template/     # container.ts / AlipayGuard.tsx / Detail.client.tsx / example-detail.page.tsx
-scripts/                      # check-env / check-project / install-skill / cli / lib/skill-registrar.mjs
+  requirements.md · architecture.md · tech-selection.md · coding-standards.md · container.md
+  ssr-seo-sharing.md · env-degradation.md · cross-page-comm.md · responsive-cross-end.md · ux-interaction.md
+  testing-acceptance.md · release.md · release-perf.md · pitfalls.md
+assets/frontend-template/     # container.ts / AlipayGuard.tsx / Detail.client.tsx / example-detail.page.tsx + vitest.config/.eslintrc/.prettierrc + test/AlipayGuard.test.tsx
+scripts/                      # check-env / check-project / check-seo / check-build / install-skill / cli / lib/skill-registrar.mjs
 ```
 
 ## Requirements
@@ -77,7 +80,7 @@ scripts/                      # check-env / check-project / install-skill / cli 
 - 一台公网 CDN；支付宝开放平台「网页&移动应用」应用；支付/授权能力在 [开放平台](https://open.alipay.com) 配置后获取
 
 ## Workflow
-确认「网页&移动应用」第三方纯 H5（非小程序、不依赖私有基建）→ 定渲染策略与 URL 结构 → 用模板 `container.ts` 做环境判定 + 服务端跳转/scheme + 降级 → 写页面（SSR head = OG/canonical/jsonld + hydrate 登录态）→ 跑 `check-env` / `check-project` 在真机/模拟器核对。详见 `SKILL.md`。
+G1 需求与细化(requirements) → G2 设计与选型(architecture/tech-selection/container/ssr-seo) → G3 编码(coding-standards + 模板) → G4 测试验收(testing-acceptance + check-env/check-project/check-seo/check-build + 真机核对) → G5 发布(release + 发布前门)。每门满足出口准则才进下一门、发现上层错回退。详见 `SKILL.md`。
 
 ## Contributing
 修订能力边界时同步：`scripts/check-env.mjs` 能力矩阵 + `references/container.md` + `references/pitfalls.md` + `scripts/check-project.mjs` 禁止项规则；改完跑 `node scripts/check-env.mjs` 与 `node scripts/check-project.mjs .`。
